@@ -20,4 +20,4 @@ EXPOSE 8080
 ENV NAME ConversationalAgent
 
 # Run the webhook function when the container launches
-CMD ["functions-framework", "--target=root_agent", "--source=main.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

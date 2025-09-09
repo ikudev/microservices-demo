@@ -37,14 +37,6 @@ spec:
   gateways:
   - frontend-gateway
   http:
-  - match:
-    - uri:
-        prefix: "/agent"
-    route:
-    - destination:
-        host: conversationalagentservice
-        port:
-          number: 8080
   - route:
     - destination:
         host: frontend

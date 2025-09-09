@@ -1,14 +1,26 @@
-
-import functions_framework
-from flask import jsonify
+from fastapi import FastAPI, Request
+import uvicorn
 import json
 
-@functions_framework.http
-def root_agent(request):
+app = FastAPI()
+
+
+@app.get("/")
+def health_check():
+    return {"status": "ok"}
+
+
+@app.get('/agent')
+def show_agent():
+    return {"agent": "running"}
+
+
+@app.post("/agent")
+async def root_agent(request: Request):
     """
     This endpoint receives the webhook request from the conversational agent.
     """
-    req_data = request.get_json()
+    req_data = await request.json()
 
     # Log the request for debugging purposes
     print(f"Received request:\n{json.dumps(req_data, indent=4)}")
@@ -42,4 +54,7 @@ def root_agent(request):
             }
         }
 
-    return jsonify(response)
+    return response
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)

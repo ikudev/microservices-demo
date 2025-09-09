@@ -36,6 +36,13 @@ spec:
   rules:
   - matches:
     - path:
+        type: PathPrefix
+        value: /agent
+    backendRefs:
+    - name: conversationalagentservice
+      port: 8080
+  - matches:
+    - path:
         value: /
     backendRefs:
     - name: frontend
