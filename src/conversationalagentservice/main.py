@@ -1,27 +1,45 @@
 
-from flask import Flask, request, jsonify
+import functions_framework
+from flask import jsonify
+import json
 
-app = Flask(__name__)
-
-
-@app.route('/webhook', methods=['POST'])
-def webhook():
+@functions_framework.http
+def root_agent(request):
     """
     This endpoint receives the webhook request from the conversational agent.
     """
     req_data = request.get_json()
 
     # Log the request for debugging purposes
-    print(f"Received request: {req_data}")
+    print(f"Received request:\n{json.dumps(req_data, indent=4)}")
 
-    # TODO: Add your conversational agent logic here
-    # For now, we'll just send a simple response
-    response_text = "This is a response from the webhook."
+    tag = req_data.get('fulfillmentInfo', {}).get('tag')
 
-    return jsonify({
-        'fulfillmentText': response_text
-    })
+    response = {}
 
+    if tag == 'greet':
+        response = {
+            "fulfillment_response": {
+                "messages": [
+                    {
+                        "text": {
+                            "text": ["Hello from your friendly neighborhood webhook!"]
+                        },
+                    }
+                ]
+            }
+        }
+    else:
+        response = {
+            "fulfillment_response": {
+                "messages": [
+                    {
+                        "text": {
+                            "text": ["Webhook received a request for tag: " + tag if tag else "None"]
+                        },
+                    }
+                ]
+            }
+        }
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    return jsonify(response)

@@ -19,5 +19,5 @@ EXPOSE 8080
 # Define environment variable
 ENV NAME ConversationalAgent
 
-# Run main.py when the container launches
-CMD ["python", "main.py"]
+# Run the webhook function when the container launches
+CMD ["functions-framework", "--target=root_agent", "--source=main.py"]
